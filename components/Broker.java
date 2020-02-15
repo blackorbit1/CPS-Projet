@@ -23,7 +23,6 @@ public class Broker extends AbstractComponent {
 	protected String uri; 
 	
 	private Map<String, List<Message>> messages; 
-	private List<String> 
 	
 //	private String[] topics= new String[0]; 
 //	private Message[] messages = new Message[0]; 
