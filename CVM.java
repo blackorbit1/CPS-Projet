@@ -12,9 +12,8 @@ import fr.sorbonne_u.components.helpers.CVMDebugModes;
 
 //-----------------------------------------------------------------------------
 
-public class			CVM
-extends		AbstractCVM
-{
+public class CVM extends AbstractCVM {
+	
 	protected static final String PUBLISHER_COMPONENT_URI = "my-URI-publisher"; 
 	protected static final String BROKER_COMPONENT_URI = "my-URI-broker"; 
 	protected static final String SUBSCRIBER_COMPONENT_URI = "my-URI-subscriber"; 
