@@ -26,44 +26,69 @@ public class ManagementOutboundPort extends		AbstractOutboundPort implements Man
 
 	@Override
 	public void subscribe(String topic, String inboundPortURI) {
-		// TODO Auto-generated method stub
+//		((ManagementCI)this.connector).subscribe(topic,inboundPortURI);
 		
 	}
 
 	@Override
 	public void subscribe(String[] topics, String inboundPortURI) {
-		// TODO Auto-generated method stub
+//		((ManagementCI)this.connector).subscribe(topics,inboundPortURI);
 		
 	}
 
 	@Override
 	public void subscribe(String topic, MessageFilterI filter, String inboundPortURI) {
-		// TODO Auto-generated method stub
+//		((ManagementCI)this.connector).subscribe(topic,filter,inboundPortURI);
 		
 	}
 
 	@Override
 	public void modifyFilter(String topic, MessageFilterI newFilter, String inboundPortURI) {
-		// TODO Auto-generated method stub
+//		((ManagementCI)this.connector).modifyFilter(topic,newFilter,inboundPortURI);
 		
 	}
 
 	@Override
 	public void unsubscribe(String topic, String inboundPortUri) {
-		// TODO Auto-generated method stub
+//		((ManagementCI)this.connector).unsubscribe(topic,inboundPortUri);
 		
 	}
 
 	@Override
-	public String getURI() throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public void createTopic(String topic) {
+//		((ManagementCI)this.connector).createTopic(topic);
+		
 	}
 
 	@Override
-	public String[] getURIs(int numberOfURIs) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public void createTopics(String[] topics) {
+//		((ManagementCI)this.connector).createTopics(topics);
+		
 	}
+
+	@Override
+	public void destroyTopic(String topic) {
+//		((ManagementCI)this.connector).destroyTopic(topic);
+		
+	}
+
+	@Override
+	public boolean isTopic(String topic) {
+		return isRemotelyConnected;
+		//return ((ManagementCI)this.connector).isTopic(topic);
+	}
+
+	@Override
+	public String[] getTopics() {
+		return null;
+		//return ((ManagementCI)this.connector).getTopics();
+	}
+
+	@Override
+	public String getPublicationPortURI() {
+		return serverPortURI;
+		//return ((ManagementCI)this.connector).getPublicationPortURI();
+	}
+
 
 }

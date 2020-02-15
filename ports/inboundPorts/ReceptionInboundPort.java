@@ -1,7 +1,10 @@
 package baduren.ports.inboundPorts;
 
+import baduren.components.Broker;
+import baduren.components.Subscriber;
 import baduren.interfaces.MessageI;
 import baduren.interfaces.ReceptionCI;
+import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
 
@@ -25,8 +28,17 @@ public class ReceptionInboundPort extends		AbstractInboundPort implements Recept
 	}
 
 	@Override
-	public void acceptMessage(MessageI m) {
-		// TODO Auto-generated method stub
+	public void acceptMessage(MessageI m) throws Exception {
+		this.owner.handleRequestAsync(new AbstractComponent.AbstractService<Void>() {
+
+			@Override
+			public Void call() throws Exception {
+				((Subscriber)this.getServiceOwner()).acceptMessage(m);
+				return null;
+				
+			}
+			
+		});
 		
 	}
 
@@ -36,17 +48,5 @@ public class ReceptionInboundPort extends		AbstractInboundPort implements Recept
 		
 	}
 
-	@Override
-	public String getURI() throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String[] getURIs(int numberOfURIs) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
 	
 }

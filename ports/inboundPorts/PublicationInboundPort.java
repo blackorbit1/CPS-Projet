@@ -1,8 +1,10 @@
 package baduren.ports.inboundPorts;
 
+import baduren.components.Broker;
 import baduren.components.Publisher;
 import baduren.interfaces.MessageI;
 import baduren.interfaces.PublicationCI;
+import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.examples.basic_cs.components.URIProvider;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
@@ -22,13 +24,21 @@ public class PublicationInboundPort extends	AbstractInboundPort implements Publi
 	throws Exception
 	{
 		super(PublicationCI.class, owner) ;
-
-		assert	owner != null ;
 	}
 
 	@Override
-	public void publish(MessageI m, String topic) {
-		this.getOwner().handleRequestSync(owner -> ((Publisher)owner).publishService(m, topic)) ;
+	public void publish(MessageI m, String topic) throws Exception {
+		this.owner.handleRequestAsync(new AbstractComponent.AbstractService<Void>() {
+
+			@Override
+			public Void call() throws Exception {
+				((Broker)this.getServiceOwner()).publish(m, 
+						"notopic yet");
+				return null;
+				
+			}
+			
+		});
 
 	}
 

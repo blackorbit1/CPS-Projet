@@ -1,17 +1,8 @@
 package baduren.ports.inboundPorts;
 
-import baduren.components.Publisher;
-import baduren.components.Subscriber;
 import baduren.interfaces.ManagementCI;
 import baduren.interfaces.MessageFilterI;
-import baduren.interfaces.PublicationCI;
-import baduren.interfaces.ReceptionCI;
-import baduren.ports.outboundPorts.ManagementOutboundPort;
-import baduren.ports.outboundPorts.PublicationOutboundPort;
 import fr.sorbonne_u.components.ComponentI;
-import fr.sorbonne_u.components.examples.basic_cs.components.URIProvider;
-import fr.sorbonne_u.components.examples.basic_cs.interfaces.URIConsumerI;
-import fr.sorbonne_u.components.examples.basic_cs.interfaces.URIProviderI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
 
 public class ManagementInboundPort extends	AbstractInboundPort implements ManagementCI {
@@ -56,14 +47,39 @@ public class ManagementInboundPort extends	AbstractInboundPort implements Manage
 		
 	}
 
+
 	@Override
-	public String getURI() throws Exception {
+	public void createTopic(String topic) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void createTopics(String[] topics) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void destroyTopic(String topic) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean isTopic(String topic) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public String[] getTopics() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String[] getURIs(int numberOfURIs) throws Exception {
+	public String getPublicationPortURI() {
 		// TODO Auto-generated method stub
 		return null;
 	}

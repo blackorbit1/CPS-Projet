@@ -1,10 +1,10 @@
 package baduren.interfaces;
 
-public interface ManagementImplementationI extends ManagementCI{
-	public void createTopic(String topic); 
-	public void createTopics(String[] topics); 
-	public void destroyTopic(String topic); 
-	public boolean isTopic(String topic); 
-	public String[] getTopics(); 
-	public String getPublicationPortURI(); 
+public interface ManagementImplementationI{
+	public void createTopic(String topic)throws Exception; 
+	public void createTopics(String[] topics)throws Exception; 
+	public void destroyTopic(String topic)throws Exception; 
+	public boolean isTopic(String topic)throws Exception; 
+	public String[] getTopics()throws Exception; 
+	public String getPublicationPortURI()throws Exception; 
 }

@@ -1,128 +1,90 @@
 package baduren;
 
-//Copyright Jacques Malenfant, Sorbonne Universite.
-//
-//Jacques.Malenfant@lip6.fr
-//
-//This software is a computer program whose purpose is to provide a
-//basic component programming model to program with components
-//distributed applications in the Java programming language.
-//
-//This software is governed by the CeCILL-C license under French law and
-//abiding by the rules of distribution of free software.  You can use,
-//modify and/ or redistribute the software under the terms of the
-//CeCILL-C license as circulated by CEA, CNRS and INRIA at the following
-//URL "http://www.cecill.info".
-//
-//As a counterpart to the access to the source code and  rights to copy,
-//modify and redistribute granted by the license, users are provided only
-//with a limited warranty  and the software's author,  the holder of the
-//economic rights,  and the successive licensors  have only  limited
-//liability. 
-//
-//In this respect, the user's attention is drawn to the risks associated
-//with loading,  using,  modifying and/or developing or reproducing the
-//software by the user in light of its specific status of free software,
-//that may mean  that it is complicated to manipulate,  and  that  also
-//therefore means  that it is reserved for developers  and  experienced
-//professionals having in-depth computer knowledge. Users are therefore
-//encouraged to load and test the software's suitability as regards their
-//requirements in conditions enabling the security of their systems and/or 
-//data to be ensured and,  more generally, to use and operate it in the 
-//same conditions as regards security. 
-//
-//The fact that you are presently reading this means that you have had
-//knowledge of the CeCILL-C license and that you accept its terms.
-
+import baduren.components.Broker;
+import baduren.components.Publisher;
+import baduren.components.Subscriber;
+import baduren.connectors.ManagementConnector;
+import baduren.connectors.PublicationConnector;
+import baduren.connectors.ReceptionConnector;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
-//import fr.sorbonne_u.components.examples.basic_cs.components.URIConsumer;
-//import fr.sorbonne_u.components.examples.basic_cs.components.URIProvider;
-//import fr.sorbonne_u.components.examples.basic_cs.connectors.URIServiceConnector;
-import baduren.components.URIPublisher; 
-import baduren.components.URISubscriber; 
-import baduren.components.URIBrokerConnector; 
+import fr.sorbonne_u.components.helpers.CVMDebugModes;
 
 //-----------------------------------------------------------------------------
 
 public class			CVM
 extends		AbstractCVM
 {
-	/** URI of the provider component (convenience).						*/
-	protected static final String	PROVIDER_COMPONENT_URI = "my-URI-provider" ;
-	/** URI of the consumer component (convenience).						*/
-	protected static final String	CONSUMER_COMPONENT_URI = "my-URI-consumer" ;
-	/** URI of the provider outbound port (simplifies the connection).	*/
-	protected static final String	URIGetterOutboundPortURI = "oport" ;
-	/** URI of the consumer inbound port (simplifies the connection).		*/
-	protected static final String	URIProviderInboundPortURI = "iport" ;
+	protected static final String PUBLISHER_COMPONENT_URI = "my-URI-publisher"; 
+	protected static final String BROKER_COMPONENT_URI = "my-URI-broker"; 
+	protected static final String SUBSCRIBER_COMPONENT_URI = "my-URI-subscriber"; 
+	
+	protected static final String ManagementOutboundPortUri = "managementOport";
+	protected static final String PublicationOutboundPortUri = "publicationOport";
+	protected static final String ReceptionOutboundPortUri = "receptionOport";
+	
+	protected static final String ManagementInboundPortUri = "managementIport";
+	protected static final String PublicationInboundPortUri = "publicationIport";
+	protected static final String ReceptionInboundPortUri = "receptionIport";
 
-	public				CVM() throws Exception
-	{
+	public	CVM() throws Exception{
 		super() ;
 	}
 
-	/** Reference to the provider component to share between deploy
-	 *  and shutdown.													*/
-	protected String	uriProviderURI ;
-	/** Reference to the consumer component to share between deploy
-	 *  and shutdown.													*/
-	protected String	uriConsumerURI ;
+	
+	protected String uriPublisherURI; 
+	protected String uriBrokerURI; 
+	protected String uriSubscriberURI; 
 
-	/**
-	 * instantiate the components, publish their port and interconnect them.
-	 * 
-	 * <p><strong>Contract</strong></p>
-	 * 
-	 * <pre>
-	 * pre	!this.deploymentDone()
-	 * post	this.deploymentDone()
-	 * </pre>
-	 * 
-	 * @see fr.sorbonne_u.components.cvm.AbstractCVM#deploy()
-	 */
 	@Override
 	public void			deploy() throws Exception
 	{
-		assert	!this.deploymentDone() ;
-
-		// --------------------------------------------------------------------
-		// Configuration phase
-		// --------------------------------------------------------------------
-
-		// debugging mode configuration; comment and uncomment the line to see
-		// the difference
-//		AbstractCVM.DEBUG_MODE.add(CVMDebugModes.PUBLIHSING) ;
-//		AbstractCVM.DEBUG_MODE.add(CVMDebugModes.CONNECTING) ;
-//		AbstractCVM.DEBUG_MODE.add(CVMDebugModes.COMPONENT_DEPLOYMENT) ;
-
-		// --------------------------------------------------------------------
-		// Creation phase
-		// --------------------------------------------------------------------
-
-		// create the provider component
-		this.uriProviderURI =
+		AbstractCVM.DEBUG_MODE.add(CVMDebugModes.PUBLIHSING) ;
+		AbstractCVM.DEBUG_MODE.add(CVMDebugModes.CONNECTING) ;
+		AbstractCVM.DEBUG_MODE.add(CVMDebugModes.COMPONENT_DEPLOYMENT) ;
+		
+		/******* create the publisher component ********/
+		
+		this.uriPublisherURI =
 			AbstractComponent.createComponent(
-					URIProvider.class.getCanonicalName(),
-					new Object[]{PROVIDER_COMPONENT_URI,
-								 URIProviderInboundPortURI}) ;
-		assert	this.isDeployedComponent(this.uriProviderURI) ;
+					Publisher.class.getCanonicalName(),
+					new Object[]{PUBLISHER_COMPONENT_URI,
+							ManagementOutboundPortUri,
+							PublicationOutboundPortUri }) ;
+		assert	this.isDeployedComponent(this.uriPublisherURI) ;
 		// make it trace its operations; comment and uncomment the line to see
 		// the difference
-		this.toggleTracing(this.uriProviderURI) ;
-		this.toggleLogging(this.uriProviderURI) ;
+		this.toggleTracing(this.uriPublisherURI) ;
+		//this.toggleLogging(this.uriPublisherURI) ;
+		
 
-		// create the consumer component
-		this.uriConsumerURI =
+		/******* create the broker component ********/
+		 //create the broker component
+		this.uriBrokerURI =
 			AbstractComponent.createComponent(
-					URIConsumer.class.getCanonicalName(),
-					new Object[]{CONSUMER_COMPONENT_URI,
-								 URIGetterOutboundPortURI}) ;
-		assert	this.isDeployedComponent(this.uriConsumerURI) ;
+					Broker.class.getCanonicalName(),
+					new Object[]{BROKER_COMPONENT_URI,
+							ManagementInboundPortUri,
+							PublicationInboundPortUri,
+							ReceptionOutboundPortUri}) ;
+		assert	this.isDeployedComponent(this.uriBrokerURI) ;
 		// make it trace its operations; comment and uncomment the line to see
 		// the difference
-		this.toggleTracing(this.uriConsumerURI) ;
-		this.toggleLogging(this.uriConsumerURI) ;
+		this.toggleTracing(this.uriBrokerURI) ;
+		//this.toggleLogging(this.uriBrokerURI) ;
+		
+		/******* create the subscriber component ********/
+		// create the broker component
+		this.uriSubscriberURI =
+			AbstractComponent.createComponent(
+					Subscriber.class.getCanonicalName(),
+					new Object[]{SUBSCRIBER_COMPONENT_URI,
+							ReceptionInboundPortUri,
+							ManagementOutboundPortUri }) ;
+		assert	this.isDeployedComponent(this.uriSubscriberURI) ;
+		// make it trace its operations; comment and uncomment the line to see
+		// the difference
+		this.toggleTracing(this.uriSubscriberURI) ;
 		
 		// --------------------------------------------------------------------
 		// Connection phase
@@ -130,19 +92,29 @@ extends		AbstractCVM
 
 		// do the connection
 		this.doPortConnection(
-				this.uriConsumerURI,
-				URIGetterOutboundPortURI,
-				URIProviderInboundPortURI,
-				URIServiceConnector.class.getCanonicalName()) ;
-		// Nota: the above use of the reference to the object representing
-		// the URI consumer component is allowed only in the deployment
-		// phase of the component virtual machine (to perform the static
-		// interconnection of components in a static architecture) and
-		// inside the concerned component (i.e., where the method
-		// doPortConnection can be called with the this destination
-		// (this.doPortConenction(...)). It must never be used in another
-		// component as the references to objects used to implement component
-		// features must not be shared among components.
+				this.uriPublisherURI,
+				PublicationOutboundPortUri,
+				PublicationInboundPortUri,
+				PublicationConnector.class.getCanonicalName()) ;
+//		// do the connection
+		this.doPortConnection(
+				this.uriPublisherURI,
+				ManagementOutboundPortUri,
+				ManagementInboundPortUri,
+				ManagementConnector.class.getCanonicalName()) ;
+		// do the connection
+		this.doPortConnection(
+				this.uriSubscriberURI,
+				ManagementOutboundPortUri,
+				ManagementInboundPortUri,
+				ManagementConnector.class.getCanonicalName()) ;
+		// do the connection
+		//logMessage(this.uriSubscriberURI+ReceptionOutboundPortUri+ ReceptionInboundPortUri) ;
+		this.doPortConnection(
+				this.uriBrokerURI,
+				ReceptionOutboundPortUri,
+				ReceptionInboundPortUri,
+				ReceptionConnector.class.getCanonicalName()) ;
 
 		// --------------------------------------------------------------------
 		// Deployment done
@@ -161,30 +133,21 @@ extends		AbstractCVM
 		// Port disconnections can be done here for static architectures
 		// otherwise, they can be done in the finalise methods of components.
 		this.doPortDisconnection(
-				this.uriConsumerURI,
-				URIGetterOutboundPortURI) ;
-
+				this.uriPublisherURI,
+				PublicationOutboundPortUri) ;
+//		this.doPortDisconnection(
+//				this.uriBrokerURI,
+//				ManagementOutboundPortUri) ;
+		this.doPortDisconnection(
+				this.uriSubscriberURI,
+				ReceptionOutboundPortUri) ;
 		super.finalise();
 	}
 
-	/**
-	 * disconnect the components and then call the base shutdown method.
-	 * 
-	 * <p><strong>Contract</strong></p>
-	 * 
-	 * <pre>
-	 * pre	true				// no more preconditions.
-	 * post	true				// no more postconditions.
-	 * </pre>
-	 * 
-	 * @see fr.sorbonne_u.components.cvm.AbstractCVM#shutdown()
-	 */
+
 	@Override
 	public void				shutdown() throws Exception
 	{
-		assert	this.allFinalised() ;
-		// any disconnection not done yet can be performed here
-
 		super.shutdown();
 	}
 
@@ -194,7 +157,7 @@ extends		AbstractCVM
 			// Create an instance of the defined component virtual machine.
 			CVM a = new CVM() ;
 			// Execute the application.
-			a.startStandardLifeCycle(2000L) ;
+			a.startStandardLifeCycle(2000000000000000L) ;
 			// Give some time to see the traces (convenience).
 			Thread.sleep(5000L) ;
 			// Simplifies the termination (termination has yet to be treated
