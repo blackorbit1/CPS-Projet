@@ -36,8 +36,7 @@ public class CVM extends AbstractCVM {
 	protected String uriSubscriberURI; 
 
 	@Override
-	public void			deploy() throws Exception
-	{
+	public void	deploy() throws Exception {
 		AbstractCVM.DEBUG_MODE.add(CVMDebugModes.PUBLIHSING) ;
 		AbstractCVM.DEBUG_MODE.add(CVMDebugModes.CONNECTING) ;
 		AbstractCVM.DEBUG_MODE.add(CVMDebugModes.COMPONENT_DEPLOYMENT) ;
