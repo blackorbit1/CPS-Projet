@@ -32,8 +32,7 @@ public class PublicationInboundPort extends	AbstractInboundPort implements Publi
 
 			@Override
 			public Void call() throws Exception {
-				((Broker)this.getServiceOwner()).publish(m, 
-						"notopic yet");
+				((Broker)this.getServiceOwner()).publish(m, topic);
 				return null;
 				
 			}
@@ -43,20 +42,46 @@ public class PublicationInboundPort extends	AbstractInboundPort implements Publi
 	}
 
 	@Override
-	public void publish(MessageI m, String[] topics) {
-		// TODO Auto-generated method stub
+	public void publish(MessageI m, String[] topics) throws Exception {
+		this.owner.handleRequestAsync(new AbstractComponent.AbstractService<Void>() {
+
+			@Override
+			public Void call() throws Exception {
+				((Broker)this.getServiceOwner()).publish(m, topics);
+				return null;
+				
+			}
+			
+		});
 		
 	}
 
 	@Override
-	public void publish(MessageI[] ms, String topics) {
-		// TODO Auto-generated method stub
-		
+	public void publish(MessageI[] ms, String topics) throws Exception {
+		this.owner.handleRequestAsync(new AbstractComponent.AbstractService<Void>() {
+
+			@Override
+			public Void call() throws Exception {
+				((Broker)this.getServiceOwner()).publish(ms, topics);
+				return null;
+				
+			}
+			
+		});
 	}
 
 	@Override
-	public void publish(MessageI[] ms, String[] topics) {
-		// TODO Auto-generated method stub
+	public void publish(MessageI[] ms, String[] topics) throws Exception {
+		this.owner.handleRequestAsync(new AbstractComponent.AbstractService<Void>() {
+
+			@Override
+			public Void call() throws Exception {
+				((Broker)this.getServiceOwner()).publish(ms, topics);
+				return null;
+				
+			}
+			
+		});
 		
 	}
 }

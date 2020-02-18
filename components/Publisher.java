@@ -53,7 +53,12 @@ public class Publisher extends AbstractComponent {
 	public void			execute() throws Exception
 	{
 		super.execute() ;
-		publish(new Message("Banane"), "fruits");
+		for (int i=0; i <10; i++) {
+			publish(new Message("Banane"+i), "fruits");
+		}
+		String topics[]= {"voiture", "avions"}; 
+		publish(new Message("voiture-volante"), topics); 
+		
 	}
 
 	@Override
@@ -75,20 +80,20 @@ public class Publisher extends AbstractComponent {
 	}
 
 
-	public void publish(MessageI m, String[] topics) {
-		// TODO Auto-generated method stub
+	public void publish(MessageI m, String[] topics) throws Exception {
+		this.publicationOutboundPort.publish(m, topics);
 
 	}
 
 
-	public void publish(MessageI[] ms, String topics) {
-		// TODO Auto-generated method stub
+	public void publish(MessageI[] ms, String topics) throws Exception {
+		this.publicationOutboundPort.publish(ms, topics);
 
 	}
 
 
-	public void publish(MessageI[] ms, String[] topics) {
-		// TODO Auto-generated method stub
+	public void publish(MessageI[] ms, String[] topics) throws Exception {
+		this.publicationOutboundPort.publish(ms, topics);
 
 	}
 	

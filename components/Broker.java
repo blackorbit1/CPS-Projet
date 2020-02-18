@@ -22,13 +22,14 @@ public class Broker extends AbstractComponent {
 	protected ReceptionOutboundPort receptionOutboundPort;
 	protected String uri; 
 	
-	private Map<String, List<Message>> messages; 
+	private Map<String, List<Message>> messages; //Map between topic and messages ( each topic has several messages)
+	private Map<String, List<String>> subscribers; //Map between topics and subscribers URI ( each topic has several URI followers) 
 	
 //	private String[] topics= new String[0]; 
 //	private Message[] messages = new Message[0]; 
 
-	protected Broker (String uri, String managementInboundPortName,
-			String publicationInboundPortName, String receptionOutboundPortName) throws Exception {
+	protected Broker (String uri, 
+			String managementInboundPortName, String publicationInboundPortName, String receptionOutboundPortName) throws Exception {
 		super(uri, 1, 0) ;
 		this.uri=uri; 
 		PortI managementInboundPort = new ManagementInboundPort(managementInboundPortName, this); 
@@ -74,9 +75,8 @@ public class Broker extends AbstractComponent {
 	}
 	
 	public void publish(MessageI m, String topic)throws Exception {
-		logMessage("Transferring message "+m.getURI()+" to subscriber");
-		if(!isTopic(topic)) 
-			createTopic(topic);
+		logMessage("Publishing message "+m.getURI()+" to topic " + topic);
+		if(!isTopic(topic)) createTopic(topic); // Si le topic n'existait pas déjà on le crée
 		this.messages.get(topic).add((Message) m); 
 		
 		this.receptionOutboundPort.acceptMessage(m);
@@ -85,19 +85,24 @@ public class Broker extends AbstractComponent {
 	
 	
 	public void publish(MessageI m, String[] topics) throws Exception{
-		// TODO Auto-generated method stub
-		
+		for(String topic : topics)
+			publish(m,topic);
 	}
 
 	
 	public void publish(MessageI[] ms, String topics) throws Exception{
-		// TODO Auto-generated method stub
+		for(MessageI msg : ms)
+			publish(msg, topics); 
 		
 	}
 
 	
 	public void publish(MessageI[] ms, String[] topics) throws Exception{
-		// TODO Auto-generated method stub
+		for(MessageI msg : ms) {
+			for(String topic: topics) {
+				publish(msg, topic); 
+			}
+		}
 		
 	}
 	
@@ -149,11 +154,6 @@ public class Broker extends AbstractComponent {
 
 	
 	public boolean isTopic(String topic) throws Exception {
-//		boolean into = false; 
-//		for (String s : this.topics) {
-//			if(topic == s) return true; 
-//		}
-//		return into; 
 		return this.messages.containsKey(topic); 
 	}
 
@@ -167,31 +167,5 @@ public class Broker extends AbstractComponent {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
-//	private static String[] addX( String arr[], String x) 
-//	{ 
-//
-//		String newarr[] = new String[arr.length + 1]; 
-//		for (int i = 0; i < arr.length; i++) 
-//			newarr[i] = arr[i]; 
-//		newarr[arr.length] = x; 
-//		return newarr; 
-//	} 
-//
-//	private static String[] removeElements(String[] arr, String key) 
-//	{ 
-//		// Move all other elements to beginning  
-//		int index = 0; 
-//		for (int i=0; i<arr.length; i++) 
-//			if (arr[i] != key) 
-//				arr[index++] = arr[i]; 
-//
-//		// Create a copy of arr[]  
-//		return Arrays.copyOf(arr, index); 
-//	} 
-
-
-
-
 
 }
